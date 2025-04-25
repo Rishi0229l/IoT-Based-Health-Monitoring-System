@@ -3,6 +3,8 @@
 <head>
     <title>Health Sensor Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
@@ -16,6 +18,7 @@
             display: flex;
             min-height: 100vh;
         }
+
         /* Sidebar */
         .sidebar {
             width: 250px;
@@ -64,10 +67,12 @@
         }
         header h1 {
             font-size: 32px;
+            margin-bottom: 10px;
         }
         header p {
             font-size: 18px;
             color: #555;
+            margin-bottom: 10px;
         }
 
         .feature-grid {
@@ -107,14 +112,47 @@
             border-radius: 5px;
         }
 
+        /* Sensor Cards */
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 60px auto 40px;
+        }
+        .sensor-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .sensor-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #00796b;
+        }
+        .sensor-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .sensor-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
         footer {
             position: fixed;
             bottom: 0;
-            width: 80%;
+            left: 250px;
+            width: calc(100% - 250px);
             background-color: #004d40;
             color: white;
             font-size: 14px;
             text-align: center;
+            padding: 10px 0;
         }
 
         /* Responsive */
@@ -126,6 +164,10 @@
                 margin-left: 0;
                 padding: 20px;
             }
+            footer {
+                left: 0;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -133,7 +175,7 @@
 
 <div class="sidebar">
     <h2><i class="fas fa-heartbeat"></i> Health Dashboard</h2>
-    <a href="/home" class="nav-link"><i class="fas fa-home"></i> Home</a>
+    <a href="/homed" class="nav-link"><i class="fas fa-home"></i> Home</a>
     <a href="/graph" class="nav-link"><i class="fas fa-chart-line"></i> Live Graph</a>
     <a href="/view-table" class="nav-link"><i class="fas fa-table"></i> Data Table</a>
     <a href="/basic" class="nav-link"><i class="fas fa-th-large"></i> General View</a>
@@ -141,16 +183,6 @@
 </div>
 
 <div class="main">
-    <header>
-        <h1>Welcome to the Health Monitoring Dashboard</h1>
-        <br><br>
-        <p>Monitor your real-time sensor data in beautiful visualizations</p>
-        <p>
-           Our system collects, analyzes, and displays health metrics such as temperature, heart rate, and ECG signals<br> — all from one clean dashboard.
-           Doctors can access it from remote and monitor live health data.
-        </p>
-        <br>
-    </header>
 
     <div class="feature-grid">
         <div class="card">
@@ -173,10 +205,51 @@
         </div>
     </div>
 
-    <footer>
-        <p>Made with 💚 by Rishikesh Raj | © 2025</p>
-    </footer>
+    <!-- General View Section -->
+    <h2 style="text-align:center; color:#00796b; margin-top: 60px;">Current Sensor Readings</h2>
+    <div class="sensor-grid" id="sensorGrid">
+        <!-- Cards populated by JavaScript -->
+    </div>
+    
+    <div>
+         <br><br><br><br><br><br><br><br><br>
+    </div>
 </div>
+
+
+<footer>
+    <p>Made with 💚 by Rishikesh Raj | © 2025</p>
+</footer>
+
+<script>
+    function fetchSensorData() {
+        fetch("/api/sensors")
+            .then(res => res.json())
+            .then(data => {
+                const index = data.timestamps.length - 1;
+                const cards = [
+                    { title: "LM35 Temperature", icon: "fa-temperature-half", value: data.lm35[index] + " °C" },
+                    { title: "ECG Value", icon: "fa-heart-pulse", value: data.ecg[index] + " V" },
+                    { title: "DHT Temperature", icon: "fa-thermometer", value: data.dhtTemp[index] + " °C" },
+                    { title: "DHT Humidity", icon: "fa-water", value: data.dhtHumidity[index] + " %" },
+                    { title: "Heart Rate", icon: "fa-heart", value: data.heartRate[index] + " BPM" }
+                ];
+                const container = document.getElementById("sensorGrid");
+                container.innerHTML = "";
+                cards.forEach(card => {
+                    container.innerHTML += `
+                        <div class="sensor-card">
+                            <div class="sensor-icon"><i class="fas ${card.icon}"></i></div>
+                            <div class="sensor-title">${card.title}</div>
+                            <div class="sensor-value">${card.value}</div>
+                        </div>`;
+                });
+            });
+    }
+
+    fetchSensorData();
+    setInterval(fetchSensorData, 5000);
+</script>
 
 </body>
 </html>

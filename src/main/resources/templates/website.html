@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>HealthCare Monitor - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #004d40;
+            padding: 20px;
+            color: white;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h2 {
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 22px;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .nav-link i {
+            margin-right: 12px;
+        }
+        .nav-link:hover {
+            background-color: #00695c;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 40px 30px;
+            flex: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #00796b;
+        }
+        header p {
+            font-size: 18px;
+            color: #444;
+        }
+
+        .banner {
+            text-align: center;
+            margin: 30px auto;
+        }
+        .banner img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card i {
+            font-size: 38px;
+            color: #00897b;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            color: #00695c;
+            margin-bottom: 10px;
+        }
+
+        .facts {
+            background-color: #e0f2f1;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+        .facts h2 {
+            text-align: center;
+            color: #00796b;
+            margin-bottom: 20px;
+        }
+        .facts ul {
+            list-style: none;
+            font-size: 16px;
+            color: #444;
+            padding-left: 0;
+        }
+        .facts ul li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .facts ul li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #004d40;
+            color: white;
+            padding: 15px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2><i class="fas fa-heartbeat"></i> Health Monitor</h2>
+    <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+    <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Live Graph</a>
+    <a href="#" class="nav-link"><i class="fas fa-table"></i> Data Table</a>
+    <a href="#" class="nav-link"><i class="fas fa-th-large"></i> General View</a>
+    <a href="/login-selection" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+</div>
+
+<div class="main">
+    <header>
+        <h1>Welcome to the HealthCare Monitoring System</h1>
+        <p>Real-time remote monitoring of vital signs. Stay connected, stay healthy.</p>
+    </header>
+
+    <div class="banner">
+        <img src="/banner.jpg" alt="Healthcare banner image">
+    </div>
+
+    <div class="features">
+        <div class="card">
+            <i class="fas fa-user-md"></i>
+            <h3>Doctor Friendly</h3>
+            <p>Access real-time vitals from anywhere in the world. Perfect for telemedicine.</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-notes-medical"></i>
+            <h3>Smart Alerts</h3>
+            <p>Get notified if temperature, BP, or ECG levels go abnormal.</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-microscope"></i>
+            <h3>Sensor-Driven Insights</h3>
+            <p>Analyze data from multiple medical sensors like DHT11, ECG, BMP180 and more.</p>
+        </div>
+    </div>
+
+    <div class="facts">
+        <h2>Did You Know?</h2>
+        <ul>
+            <li>80% of heart conditions are preventable with early detection and monitoring.</li>
+            <li>Remote patient monitoring reduces hospital readmissions by up to 45%.</li>
+            <li>Sensor-based systems help track vitals with accuracy and consistency.</li>
+            <li>ECG monitoring can detect heart abnormalities before symptoms appear.</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>Made with 💚 by Rishikesh Raj | HealthCare Monitor &copy; 2025</p>
+    </footer>
+</div>
+
+</body>
+</html>

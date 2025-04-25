@@ -24,7 +24,7 @@ public class TSController {
     @ResponseBody
     public ResponseEntity<String> fetchSensorData() {
         try {
-            String urlStr = "https://api.thingspeak.com/channels/2910562/feeds.json?api_key=CKW0IQHYGTS2IW6C&results=30";
+            String urlStr = "https://api.thingspeak.com/channels/2898862/feeds.json?api_key=CRCX3SP9YV1MDXVX&results=30";
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -41,29 +41,29 @@ public class TSController {
             JSONArray feeds = json.getJSONArray("feeds");
 
             JSONArray timestamps = new JSONArray();
-            JSONArray lm35 = new JSONArray();        // field1
-            JSONArray ecg = new JSONArray();         // field2
-            JSONArray dhtTemp = new JSONArray();     // field3
-            JSONArray dhtHumidity = new JSONArray(); // field4
-            JSONArray heartRate = new JSONArray();   // field5
+            JSONArray heartRate = new JSONArray();      // Field 1
+            JSONArray ecg = new JSONArray();            // Field 2
+            JSONArray lm35 = new JSONArray();           // Field 3
+            JSONArray dhtTemp = new JSONArray();        // Field 4
+            JSONArray dhtHumidity = new JSONArray();    // Field 5
 
             for (int i = 0; i < feeds.length(); i++) {
                 JSONObject feed = feeds.getJSONObject(i);
                 timestamps.put(feed.getString("created_at"));
-                lm35.put(feed.optDouble("field1", 0));
+                heartRate.put(feed.optDouble("field1", 0));
                 ecg.put(feed.optDouble("field2", 0));
-                dhtTemp.put(feed.optDouble("field3", 0));
-                dhtHumidity.put(feed.optDouble("field4", 0));
-                heartRate.put(feed.optDouble("field5", 0));
+                lm35.put(feed.optDouble("field3", 0));
+                dhtTemp.put(feed.optDouble("field4", 0));
+                dhtHumidity.put(feed.optDouble("field5", 0));
             }
 
             JSONObject result = new JSONObject();
             result.put("timestamps", timestamps);
-            result.put("lm35", lm35);
+            result.put("heartRate", heartRate);
             result.put("ecg", ecg);
+            result.put("lm35", lm35);
             result.put("dhtTemp", dhtTemp);
             result.put("dhtHumidity", dhtHumidity);
-            result.put("heartRate", heartRate);
 
             return ResponseEntity.ok(result.toString());
 

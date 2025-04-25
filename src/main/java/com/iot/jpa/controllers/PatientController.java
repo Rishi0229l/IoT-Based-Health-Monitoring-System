@@ -32,7 +32,6 @@ public class PatientController {
         if (patient != null && patient.getPassword().equals(password)) {
             // If credentials are correct, redirect to home page
         	patientEmail=email;
-        	System.out.println(patientEmail);
             return "redirect:/homep";
         } else {
             return "redirect:/login-patient";

@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Patient Feedback Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Feedback Portal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -12,7 +12,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .feedback-card {
-      max-width: 600px;
+      max-width: 650px;
       margin: 2rem auto;
       padding: 2rem;
       border-radius: 1rem;
@@ -24,6 +24,7 @@
   </style>
 </head>
 <body>
+
   <div class="container text-center mt-4">
     <h2 class="text-primary">
       <i class="fas fa-stethoscope"></i> Patient Feedback Portal
@@ -31,24 +32,38 @@
   </div>
 
   <div class="feedback-card bg-white">
-    <form id="feedbackForm" method="POST">
-      <input type="hidden" name="patientId" th:value="${patient.id}" />
-
-      <div class="mb-3" >
-        <label class="form-label"><i class="fas fa-user"></i> Patient Email</label>
-        <input type="email" class="form-control" th:value="${patient.email}" disabled />
+    <form id="feedbackForm">
+      <!-- Patient Dropdown -->
+      <div class="mb-3">
+        <label class="form-label"><i class="fas fa-user-md"></i> Select Patient</label>
+        <select class="form-select" id="patientSelect" required>
+          <option value="" disabled selected>Select a patient</option>
+          <th:block th:each="p : ${patients}">
+            <option th:value="${p.id}" th:data-email="${p.email}" th:text="${p.fullName}"></option>
+          </th:block>
+        </select>
       </div>
 
-      <!-- <div class="mb-3">
+      <!-- Auto-filled Email -->
+      <div class="mb-3">
+        <label class="form-label"><i class="fas fa-envelope"></i> Patient Email</label>
+        <input type="email" class="form-control" id="patientEmail" name="email" readonly required>
+        <input type="hidden" name="patientId" id="patientId">
+      </div>
+
+      <!-- Subject -->
+      <div class="mb-3">
         <label class="form-label"><i class="fas fa-heading"></i> Subject (Optional)</label>
         <input type="text" class="form-control" name="subject">
       </div>
 
+      <!-- Date of Visit -->
       <div class="mb-3">
         <label class="form-label"><i class="fas fa-calendar"></i> Date of Visit</label>
         <input type="date" class="form-control" name="dateOfVisit">
-      </div> -->
+      </div>
 
+      <!-- Feedback -->
       <div class="mb-3">
         <label class="form-label"><i class="fas fa-comment-medical"></i> Feedback</label>
         <textarea class="form-control" name="message" rows="6" required></textarea>
@@ -62,30 +77,27 @@
     </form>
   </div>
 
+  <!-- JavaScript Logic -->
   <script>
-    document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+    document.getElementById("patientSelect").addEventListener("change", function () {
+      const selected = this.options[this.selectedIndex];
+      document.getElementById("patientEmail").value = selected.getAttribute("data-email");
+      document.getElementById("patientId").value = selected.value;
+    });
+
+    document.getElementById("feedbackForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const form = e.target;
-      const formData = new FormData(form);
-
+      const formData = new FormData(this);
       fetch('/send-feedback', {
         method: 'POST',
-        body: new URLSearchParams(formData)
+        body: formData
       })
-      .then(response => {
-        if (response.ok) {
-          alert("✅ Feedback sent successfully!");
-          form.reset();
-        } else {
-          alert("❌ Failed to send feedback. Try again.");
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("⚠️ Something went wrong.");
-      });
+      .then(response => response.text())
+      .then(msg => alert("✅ " + msg))
+      .catch(error => alert("❌ Failed to send: " + error));
     });
   </script>
+
 </body>
 </html>

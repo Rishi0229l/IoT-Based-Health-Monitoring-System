@@ -1,19 +1,23 @@
 package com.iot.jpa.controllers;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ui.Model;
 
 import com.iot.jpa.Entities.Patient;
 import com.iot.jpa.dao.PatientRepository;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Controller
 public class FeedbackController {
@@ -24,38 +28,43 @@ public class FeedbackController {
     @Autowired
     private JavaMailSender mailSender;
 
-    // Show form
-    @GetMapping("/feedback/{patientId}")
-    public String showForm(@PathVariable Long patientId, Model model) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow();
-        model.addAttribute("patient", patient);
+    // Load feedback page with patient dropdown
+    @GetMapping("/feedback")
+    public String showFeedbackForm(Model model) {
+        List<Patient> patients = patientRepository.findAll();
+        model.addAttribute("patients", patients);
         return "feedback";
     }
 
-    // Handle form
+    // Send feedback via email
     @PostMapping("/send-feedback")
     @ResponseBody
-    public ResponseEntity<String> sendFeedback(
-        @RequestParam Long patientId,
-        @RequestParam String message,
-        @RequestParam(required = false) String subject,
-        @RequestParam(required = false) String dateOfVisit) {
-
-        Patient patient = patientRepository.findById(patientId).orElseThrow();
-
-        String emailSubject = (subject == null || subject.isBlank()) ? "Doctor's Feedback" : subject;
-        String fullMessage = "Date of Visit: " + (dateOfVisit != null ? dateOfVisit : "N/A") + "\n\n" + message;
-
+    public String sendFeedback(
+            @RequestParam("email") String patientEmail,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "dateOfVisit", required = false) String dateOfVisit,
+            @RequestParam("message") String message
+    ) {
         try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(patient.getEmail());
-            mail.setSubject(emailSubject);
-            mail.setText(fullMessage);
-            mailSender.send(mail);
-            return ResponseEntity.ok("Feedback sent");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Email failed");
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
+            helper.setTo(patientEmail);
+            helper.setSubject(subject != null && !subject.isBlank() ? subject : "Doctor's Feedback");
+
+            String htmlMsg = "<h3>Feedback from your Doctor</h3>" +
+                    "<p><strong>Date of Visit:</strong> " + (dateOfVisit != null ? dateOfVisit : "N/A") + "</p>" +
+                    "<p><strong>Message:</strong></p>" +
+                    "<p>" + message + "</p>";
+
+            helper.setText(htmlMsg, true); // Enable HTML
+
+            mailSender.send(mimeMessage);
+
+            return "Feedback sent successfully to " + patientEmail;
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return "Failed to send feedback. Please try again.";
         }
     }
 }
-

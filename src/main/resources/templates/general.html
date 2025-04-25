@@ -175,10 +175,11 @@
 
 <div class="sidebar">
     <h2><i class="fas fa-heartbeat"></i> Health Dashboard</h2>
-    <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+    <a href="/homep" class="nav-link"><i class="fas fa-home"></i> Home</a>
     <a href="/graph" class="nav-link"><i class="fas fa-chart-line"></i> Live Graph</a>
     <a href="/view-table" class="nav-link"><i class="fas fa-table"></i> Data Table</a>
     <a href="/basic" class="nav-link"><i class="fas fa-th-large"></i> General View</a>
+    <a href="/website" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div class="main">
@@ -245,6 +246,32 @@
                 });
             });
     }
+    
+    /* function fetchSensorData() {
+        fetch("/api/sensors")
+            .then(res => res.json())
+            .then(data => {
+                const index = data.timestamps.length - 1;
+                const cards = [
+                    { title: "Heart Rate", icon: "fa-heart", value: data.heartRate[index] + " BPM" },            // Field 1
+                    { title: "ECG Value", icon: "fa-heart-pulse", value: data.ecg[index] + " V" },               // Field 2
+                    { title: "LM35 Temperature", icon: "fa-temperature-half", value: data.lm35[index] + " °C" }, // Field 3
+                    { title: "DHT Temperature", icon: "fa-thermometer", value: data.dhtTemp[index] + " °C" },    // Field 4
+                    { title: "DHT Humidity", icon: "fa-water", value: data.dhtHumidity[index] + " %" }           // Field 5
+                ];
+                const container = document.getElementById("sensorGrid");
+                container.innerHTML = "";
+                cards.forEach(card => {
+                    container.innerHTML += `
+                        <div class="sensor-card">
+                            <div class="sensor-icon"><i class="fas ${card.icon}"></i></div>
+                            <div class="sensor-title">${card.title}</div>
+                            <div class="sensor-value">${card.value}</div>
+                        </div>`;
+                });
+            });
+    } */
+
 
     fetchSensorData();
     setInterval(fetchSensorData, 5000);

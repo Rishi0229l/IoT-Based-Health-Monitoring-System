@@ -12,9 +12,14 @@ public class generalController {
 	    return "general"; // Loads templates/general.html
 	}
 	
+	@GetMapping("/basic2")
+	public String viewGeneralPage2() {
+	    return "general2"; // Loads templates/general.html
+	}
+	
 	@GetMapping("/")
 	public String home() {
-	    return "home"; // Loads home.html
+	    return "website"; // Loads home.html
 	}
 	
 	@GetMapping("/homep")
@@ -23,7 +28,7 @@ public class generalController {
 	}
 	@GetMapping("/logoutp")
 	public String logoutp() {
-	    return "home"; // Loads home.html
+	    return "website"; // Loads home.html
 	}
 	
 	@GetMapping("/login-selection")
@@ -47,10 +52,14 @@ public class generalController {
 	    return "patientRegistration";
 	}
 	
+	@GetMapping("/website")
+	public String websitehome() {
+	    return "website";
+	}
 	
 	// Feedback management
-	@GetMapping("/feedback")
-	public String feedback() {
-	    return "feedback";
-	}
+//	@GetMapping("/feedback")
+//	public String feedback() {
+//	    return "feedback";
+//	}
 }

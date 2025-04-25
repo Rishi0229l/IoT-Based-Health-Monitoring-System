@@ -30,7 +30,7 @@ public class DoctorController {
 	}
 	@GetMapping("/logoutd")
 	public String logoutd() {
-	    return "home"; // Loads home.html
+	    return "website"; // Loads home.html
 	}
     @PostMapping("/doctor-login")
     public String loginD(@RequestParam String email, @RequestParam String password) {
