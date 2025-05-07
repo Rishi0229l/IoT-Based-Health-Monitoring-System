@@ -2,6 +2,8 @@ package com.iot.jpa.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import com.iot.jpa.services.PatientUploadService;
 public class PatientController {
 	
 	private String patientEmail="";
+	private String patientName="user";
 
 	@Autowired
     private PatientUploadService patientUploadService;
@@ -32,6 +35,7 @@ public class PatientController {
         if (patient != null && patient.getPassword().equals(password)) {
             // If credentials are correct, redirect to home page
         	patientEmail=email;
+        	patientName=patient.getFullName();
             return "redirect:/homep";
         } else {
             return "redirect:/login-patient";
@@ -42,4 +46,15 @@ public class PatientController {
     public String getPatientEmail() {
 		return patientEmail;
 	}
+
+	public String getPatientName() {
+		return patientName;
+	}
+	
+	@GetMapping("/homep")
+	public String homep(Model model) {
+		model.addAttribute("name", patientName);
+	    return "homep"; // Loads home for patient
+	}
+
 }

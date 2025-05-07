@@ -15,10 +15,7 @@ import java.net.URL;
 @Controller
 public class TSController {
 
-    @GetMapping("/graph")
-    public String index() {
-        return "index"; // Loads templates/index.html
-    }
+    
 
     @GetMapping("/api/sensors")
     @ResponseBody

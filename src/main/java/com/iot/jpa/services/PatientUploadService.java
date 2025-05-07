@@ -20,4 +20,6 @@ public class PatientUploadService {
     public Patient findPatientByEmail(String email) {
         return patientRepository.findByEmail(email);
     }
+    
+    
 }

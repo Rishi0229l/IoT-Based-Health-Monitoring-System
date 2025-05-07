@@ -135,14 +135,15 @@
     <h2><i class="fas fa-heartbeat"></i> Health Dashboard</h2>
     <a href="/homep" class="nav-link"><i class="fas fa-home"></i> Home</a>
     <a href="/graph" class="nav-link"><i class="fas fa-chart-line"></i> Live Graph</a>
-    <a href="/view-table" class="nav-link"><i class="fas fa-table"></i> Data Table</a>
+    <a href="/view-table2" class="nav-link"><i class="fas fa-table"></i> Data Table</a>
     <a href="/basic" class="nav-link"><i class="fas fa-th-large"></i> General View</a>
     <a href="/logoutp" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div class="main">
     <header>
-        <h1>Welcome to the Health Monitoring Dashboard</h1>
+        <h1 th:text="'Welcome ' + ${name} + ', to the Health Monitoring Dashboard'"></h1>
+        
         <br><br>
         <p>Monitor your real-time sensor data in beautiful visualizations</p>
         <p>
@@ -163,7 +164,7 @@
             <i class="fas fa-table"></i>
             <h3>Tabular Data</h3>
             <p>View the most recent data in a simple table format.</p>
-            <a href="/view-table">View Table</a>
+            <a href="/view-table2">View Table</a>
         </div>
         <div class="card">
             <i class="fas fa-th-large"></i>
